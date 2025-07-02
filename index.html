@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immutag - Secure Ownership with Blockchain</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e44ce;
+            --secondary: #2a2d3b;
+            --accent: #00c6ff;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: #f5f7ff;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            background-color: rgba(78, 68, 206, 0.95);
+        }
+        
+        header.scrolled nav ul li a {
+            color: white;
+        }
+        
+        header.scrolled .logo {
+            color: white;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #4e44ce 0%, #2a2d3b 100%);
+            color: white;
+            padding: 180px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop') no-repeat center center/cover;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            border: 2px solid var(--accent);
+        }
+        
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 198, 255, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            bottom: -10px;
+            left: 25%;
+            border-radius: 3px;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 30px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover .step-icon {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+        }
+        
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        /* Why Immutag Section */
+        .why-immutag {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+        }
+        
+        .benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .benefit {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .benefit:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .benefit::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: all 0.3s ease;
+        }
+        
+        .benefit:hover::after {
+            height: 10px;
+        }
+        
+        .benefit-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .benefit h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        /* Supported Devices Section */
+        .supported-devices {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .devices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .device {
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            width: 180px;
+        }
+        
+        .device:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        
+        .device img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .device:hover img {
+            filter: grayscale(0%);
+        }
+        
+        .device h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+        
+        /* Trust Section */
+        .trust {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #4e44ce 0%, #2a2d3b 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .trust .section-title h2 {
+            color: white;
+        }
+        
+        .trust .section-title p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .trust-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .feature-icon {
+            font-size: 50px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
+        }
+        
+        /* Blockchain Animation */
+        .blockchain-animation {
+            position: relative;
+            height: 200px;
+            margin: 50px 0;
+            overflow: hidden;
+        }
+        
+        .blockchain-node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            animation: floatNode 15s infinite linear;
+        }
+        
+        .blockchain-connection {
+            position: absolute;
+            height: 2px;
+            background-color: rgba(78, 68, 206, 0.3);
+            transform-origin: left center;
+            animation: pulseConnection 3s infinite ease-in-out;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            background: url('https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop') no-repeat center center/cover;
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(78, 68, 206, 0.8);
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        
+        .chatbot-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-width: 90vw;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .chatbot-window.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .chatbot-messages {
+            height: 300px;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .bot-message {
+            background-color: white;
+            border: 1px solid #eee;
+            border-bottom-left-radius: 5px;
+            margin-right: auto;
+        }
+        
+        .user-message {
+            background-color: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+            margin-left: auto;
+        }
+        
+        .chatbot-input {
+            display: flex;
+            padding: 10px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+        }
+        
+        .chatbot-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-input button:hover {
+            background-color: var(--accent);
+            transform: rotate(15deg);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes floatNode {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(50px, 30px);
+            }
+            50% {
+                transform: translate(100px, 0);
+            }
+            75% {
+                transform: translate(50px, -30px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+        
+        @keyframes pulseConnection {
+            0% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.3;
+            }
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Dotted Animation */
+        .dotted-animation {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            margin: 40px 0;
+            overflow: hidden;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: floatDot 15s infinite linear;
+        }
+        
+        @keyframes floatDot {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(100px, 50px);
+            }
+            50% {
+                transform: translate(200px, 0);
+            }
+            75% {
+                transform: translate(100px, -50px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .step {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+            
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                transform: translateY(-150%);
+                transition: all 0.3s ease;
+                z-index: 999;
+            }
+            
+            nav.active {
+                transform: translateY(0);
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 150px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .footer-column {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .chatbot-window {
+                width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <img src="ImmuTag-logo-design.png" alt="Immutag Logo">
+              
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="roadmap.html">Roadmap</a></li>
+                      <li><a href="how_it_works.html">How it works</a></li>
+                    <li><a href="white_paper.html">White Paper</a></li>
+                   
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <h1>Own it. Prove it. Protect it.</h1>
+            <p>The future of secure ownership starts here. Immutag is building a new standard in asset protection — combining blockchain technology with physical tagging to give you irrefutable proof of ownership for your most valuable devices.</p>
+            <div class="hero-buttons">
+                <a href="#cta" class="btn btn-primary pulse">Join the Waitlist</a>
+                <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Immutag links a tamper-proof tag on your device with a unique digital identity stored on the blockchain. Once tagged, your item becomes verifiable, transferable, and harder to steal or resell.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon"><i class="fas fa-tag"></i></div>
+                    <h3>Tag your device</h3>
+                    <p>Apply the Immutag NFC tag to your valuable item for permanent identification.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Register it securely</h3>
+                    <p>Link your tag to a blockchain-verified digital identity through our secure app.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Prove ownership</h3>
+                    <p>Verify, transfer, or recover ownership anytime with immutable blockchain records.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Key Features</h2>
+                <p>Discover the powerful features that make Immutag the future of asset protection</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-link"></i></div>
+                    <h3>Physical-Digital Link</h3>
+                    <p>Seamless connection between physical tags and digital blockchain identities for each item.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Instant Verification</h3>
+                    <p>Quickly verify ownership status with a simple scan using our mobile app.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-history"></i></div>
+                    <h3>Ownership History</h3>
+                    <p>Complete, tamper-proof record of all ownership transfers and verifications.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-share-alt"></i></div>
+                    <h3>Easy Transfers</h3>
+                    <p>Transfer ownership to new users with just a few taps in the app.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Theft Protection</h3>
+                    <p>Tamper-evident tags and blockchain records deter theft and unauthorized resale.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
+                    <h3>Insurance Integration</h3>
+                    <p>Streamlined claims process with verifiable ownership and history.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blockchain Animation -->
+    <div class="blockchain-animation" id="blockchainAnimation"></div>
+
+    <!-- Why Immutag Section -->
+    <section class="why-immutag" id="why-immutag">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Immutag?</h2>
+                <p>Our technology provides unparalleled security and convenience for protecting your valuable assets.</p>
+            </div>
+            <div class="benefits">
+                <div class="benefit">
+                    <div class="benefit-icon"><i class="fas fa-certificate"></i></div>
+                    <h3>Proven Ownership</h3>
+                    <p>Your tag is linked to a blockchain-verified NFT that serves as indisputable proof of ownership.</p>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Theft Deterrent</h3>
+                    <p>Harder for thieves to profit from stolen goods with verifiable ownership records.</p>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <h3>Faster Insurance</h3>
+                    <p>Verifiable history speeds up insurance claims and payout processes.</p>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <h3>Simplified Transfers</h3>
+                    <p>Sell or gift your item with digital proof of authenticity and ownership history.</p>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon"><i class="fas fa-user-shield"></i></div>
+                    <h3>Law Enforcement</h3>
+                    <p>Streamlined checks for stolen assets with integrated verification systems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Devices Section -->
+    <section class="supported-devices" id="devices">
+        <div class="container">
+            <div class="section-title">
+                <h2>Supported Devices</h2>
+                <p>Immutag is being developed to support a wide range of valuable devices with more categories launching soon.</p>
+            </div>
+            <div class="devices">
+                <div class="device">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2965/2965300.png" alt="Smartphone">
+                    <h3>Smartphones</h3>
+                </div>
+                <div class="device">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2965/2965278.png" alt="Laptop">
+                    <h3>Laptops</h3>
+                </div>
+                <div class="device">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2965/2965358.png" alt="E-bike">
+                    <h3>E-bikes</h3>
+                </div>
+                <div class="device">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2965/2965305.png" alt="Smartwatch">
+                    <h3>Smartwatches</h3>
+                </div>
+                <div class="device">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2965/2965293.png" alt="More">
+                    <h3>More Coming</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust" id="trust">
+        <div class="container">
+            <div class="section-title">
+                <h2>Trust in Technology</h2>
+                <p>We're building with transparency, security, and compliance at the core. Your ownership record is encrypted, immutable, and verifiable — anytime, anywhere.</p>
+            </div>
+            <div class="trust-content">
+                <p>Immutag leverages the power of blockchain technology to create an unforgeable record of ownership that's decentralized, secure, and accessible worldwide. Our system is designed to integrate with existing platforms while maintaining the highest standards of privacy and security.</p>
+            </div>
+            <div class="dotted-animation" id="dottedAnimation"></div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="cta">
+        <div class="container cta-content">
+            <h2>Stay Ahead of the Curve</h2>
+            <p>Be the first to protect what's yours. Sign up below to get early access, news updates, and exclusive launch offers.</p>
+            <div class="cta-form">
+                <form id="waitlistForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Your Email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Join the Waitlist</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Immutag</h3>
+                    <p>Own it. Prove it. Protect it. The future of secure ownership starts here.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#why-immutag">Why Immutag</a></li>
+                        <li><a href="#devices">Devices</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Roadmap</a></li>
+                        <li><a href="#">Whitepaper</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Immutag. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h3>Immutag Assistant</h3>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot-message">Hello! I'm your Immutag assistant. How can I help you today?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Type your message...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chatbot-btn" id="chatbotBtn"><i class="fas fa-comment-dots"></i></button>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const nav = document.getElementById('nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            mobileMenuBtn.innerHTML = nav.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on a link
+        const navLinks = document.querySelectorAll('nav ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Form submission
+        const waitlistForm = document.getElementById('waitlistForm');
+        waitlistForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for joining our waitlist! We\'ll be in touch soon.');
+            waitlistForm.reset();
+        });
+        
+        // Chatbot functionality
+        const chatbotBtn = document.getElementById('chatbotBtn');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const chatbotClose = document.getElementById('chatbotClose');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        
+        chatbotBtn.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('active');
+        });
+        
+        chatbotClose.addEventListener('click', () => {
+            chatbotWindow.classList.remove('active');
+        });
+        
+        const botResponses = [
+            "Immutag provides blockchain-based proof of ownership for your valuable items.",
+            "You can tag smartphones, laptops, e-bikes, smartwatches and more with Immutag.",
+            "The Immutag app will be available soon. Join our waitlist to get early access!",
+            "Immutag tags are tamper-proof and linked to a blockchain-verified NFT.",
+            "Our technology helps deter theft and speeds up insurance claims.",
+            "You can transfer ownership of your items digitally with Immutag.",
+            "Law enforcement can easily verify ownership through our system.",
+            "For more information, please visit our website or contact support."
+        ];
+        
+        const greetings = ["hi", "hello", "hey"];
+        const thanks = ["thanks", "thank you", "appreciate"];
+        
+        function addBotMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'bot-message');
+            messageDiv.textContent = message;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function processUserInput() {
+            const userMessage = chatbotInput.value.trim();
+            if (userMessage === '') return;
+            
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message', 'user-message');
+            userMessageDiv.textContent = userMessage;
+            chatbotMessages.appendChild(userMessageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            
+            chatbotInput.value = '';
+            
+            // Simulate typing delay
+            setTimeout(() => {
+                let response;
+                const lowerMessage = userMessage.toLowerCase();
+                
+                if (greetings.some(word => lowerMessage.includes(word))) {
+                    response = "Hello! How can I help you with Immutag today?";
+                } else if (thanks.some(word => lowerMessage.includes(word))) {
+                    response = "You're welcome! Is there anything else I can help with?";
+                } else if (lowerMessage.includes('what') || lowerMessage.includes('how')) {
+                    response = botResponses[Math.floor(Math.random() * botResponses.length)];
+                } else {
+                    response = "I'm here to help with any questions about Immutag. What would you like to know?";
+                }
+                
+                addBotMessage(response);
+            }, 1000);
+        }
+        
+        chatbotSend.addEventListener('click', processUserInput);
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                processUserInput();
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.step, .benefit, .device, .feature-card');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        
+        // Initialize elements with opacity 0 for animation
+        document.querySelectorAll('.step, .benefit, .device, .feature-card').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'all 0.5s ease';
+        });
+        
+        // Create blockchain animation
+        function createBlockchainAnimation() {
+            const container = document.getElementById('blockchainAnimation');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            // Create nodes
+            for (let i = 0; i < 8; i++) {
+                const node = document.createElement('div');
+                node.classList.add('blockchain-node');
+                node.style.left = `${10 + (i * (width - 40) / 7)}px`;
+                node.style.top = `${height / 2 + (Math.random() * 40 - 20)}px`;
+                node.style.animationDelay = `${i * 0.5}s`;
+                container.appendChild(node);
+            }
+            
+            // Create connections
+            const nodes = document.querySelectorAll('.blockchain-node');
+            nodes.forEach((node, index) => {
+                if (index < nodes.length - 1) {
+                    const nextNode = nodes[index + 1];
+                    const x1 = node.offsetLeft + 10;
+                    const y1 = node.offsetTop + 10;
+                    const x2 = nextNode.offsetLeft + 10;
+                    const y2 = nextNode.offsetTop + 10;
+                    
+                    const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                    
+                    const connection = document.createElement('div');
+                    connection.classList.add('blockchain-connection');
+                    connection.style.width = `${length}px`;
+                    connection.style.left = `${x1}px`;
+                    connection.style.top = `${y1}px`;
+                    connection.style.transform = `rotate(${angle}deg)`;
+                    connection.style.animationDelay = `${index * 0.2}s`;
+                    container.appendChild(connection);
+                }
+            });
+        }
+        
+        // Create dotted animation
+        function createDottedAnimation() {
+            const container = document.getElementById('dottedAnimation');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            for (let i = 0; i < 20; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.style.left = `${Math.random() * width}px`;
+                dot.style.top = `${Math.random() * height}px`;
+                dot.style.animationDelay = `${i * 0.3}s`;
+                container.appendChild(dot);
+            }
+        }
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', () => {
+            animateOnScroll();
+            createBlockchainAnimation();
+            createDottedAnimation();
+        });
+    </script>
+</body>
+</html>
